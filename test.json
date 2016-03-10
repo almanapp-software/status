@@ -1,0 +1,114 @@
+[
+  {
+    "url": "https://api.github.com/repos/almanapp-software/status/issues/2",
+    "repository_url": "https://api.github.com/repos/almanapp-software/status",
+    "labels_url": "https://api.github.com/repos/almanapp-software/status/issues/2/labels{/name}",
+    "comments_url": "https://api.github.com/repos/almanapp-software/status/issues/2/comments",
+    "events_url": "https://api.github.com/repos/almanapp-software/status/issues/2/events",
+    "html_url": "https://github.com/almanapp-software/status/issues/2",
+    "id": 139866012,
+    "number": 2,
+    "title": "test closed issue",
+    "user": {
+      "login": "spidfire",
+      "id": 156694,
+      "avatar_url": "https://avatars.githubusercontent.com/u/156694?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/spidfire",
+      "html_url": "https://github.com/spidfire",
+      "followers_url": "https://api.github.com/users/spidfire/followers",
+      "following_url": "https://api.github.com/users/spidfire/following{/other_user}",
+      "gists_url": "https://api.github.com/users/spidfire/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/spidfire/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/spidfire/subscriptions",
+      "organizations_url": "https://api.github.com/users/spidfire/orgs",
+      "repos_url": "https://api.github.com/users/spidfire/repos",
+      "events_url": "https://api.github.com/users/spidfire/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/spidfire/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/Backend",
+        "name": "Backend",
+        "color": "bfd4f2"
+      },
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/Maintenance",
+        "name": "Maintenance",
+        "color": "bfe5bf"
+      }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2016-03-10T11:52:38Z",
+    "updated_at": "2016-03-10T11:52:42Z",
+    "closed_at": "2016-03-10T11:52:42Z",
+    "body": "this one is closed"
+  },
+  {
+    "url": "https://api.github.com/repos/almanapp-software/status/issues/1",
+    "repository_url": "https://api.github.com/repos/almanapp-software/status",
+    "labels_url": "https://api.github.com/repos/almanapp-software/status/issues/1/labels{/name}",
+    "comments_url": "https://api.github.com/repos/almanapp-software/status/issues/1/comments",
+    "events_url": "https://api.github.com/repos/almanapp-software/status/issues/1/events",
+    "html_url": "https://github.com/almanapp-software/status/issues/1",
+    "id": 139865801,
+    "number": 1,
+    "title": "Test issue",
+    "user": {
+      "login": "spidfire",
+      "id": 156694,
+      "avatar_url": "https://avatars.githubusercontent.com/u/156694?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/spidfire",
+      "html_url": "https://github.com/spidfire",
+      "followers_url": "https://api.github.com/users/spidfire/followers",
+      "following_url": "https://api.github.com/users/spidfire/following{/other_user}",
+      "gists_url": "https://api.github.com/users/spidfire/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/spidfire/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/spidfire/subscriptions",
+      "organizations_url": "https://api.github.com/users/spidfire/orgs",
+      "repos_url": "https://api.github.com/users/spidfire/repos",
+      "events_url": "https://api.github.com/users/spidfire/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/spidfire/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/API",
+        "name": "API",
+        "color": "bfe5bf"
+      },
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/Maintenance",
+        "name": "Maintenance",
+        "color": "bfe5bf"
+      },
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/Maintenance",
+        "name": "Down",
+        "color": "bfe5bf"
+      },
+      {
+        "url": "https://api.github.com/repos/almanapp-software/status/labels/Maintenance",
+        "name": "Having Issues",
+        "color": "bfe5bf"
+      }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2016-03-10T11:51:31Z",
+    "updated_at": "2016-03-10T14:46:27Z",
+    "closed_at": null,
+    "body": "Some test message"
+  }
+]

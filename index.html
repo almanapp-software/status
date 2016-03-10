@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="robots" content="index, follow">
+		<title>Status</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+		<link rel="stylesheet" href="milligram.min.css">
+		<link rel="stylesheet" href="style.css">
+		<link rel="icon" href="logo.png">
+	</head>
+	<body>
+
+		<main class="wrapper">
+
+			<nav class="navigation">
+				<section class="container">
+
+					<a class="navigation-title" href="">
+						<img class="img" src="logo.png" height="30">
+						<h1 class="title">Almanapp Status</h1>
+					</a>
+
+				
+
+				</section>
+				<div id='warning_rate' style='display:none;'>
+					
+						LOOK OUT: This system is using the github API which limits you to 60 requests per hour.
+						<span id='warning_rate_current'></span>
+				</div>
+			</nav>
+			
+			
+
+			<section class="container" id="main">
+				<div id="noticecontainer">
+					
+				</div>
+
+				<!-- {% if not panels %}
+					<div class="panel operational">
+						All Systems operational.
+					</div>
+				{% else %}
+					{% for severity, systems in panels.items() if systems %}
+					<div class="panel {{ severity }}">
+						{{ severity.capitalize() }} on {% for system in systems %}{{ system }}{% if not loop.last %}, {% endif %}{% endfor %}.
+					</div>
+					{% endfor %}
+				{% endif %} -->
+
+				<h4>Systems</h4>
+				<ul class="systems">
+					
+				</ul>
+
+				<h4>Active Incidents</h4>
+				<div id='incidentcontainer'>
+				</div>
+				<h4>Closed Incidents</h4>
+				<div id='closedincidentcontainer'>
+				</div>
+					<!-- {% for incident in incidents %}
+					
+					{% endfor %}
+				{% else %}
+					<em>No incidents in the past 90 days.</em>
+				{% endif %} -->
+			</section>
+
+
+			<footer class="footer">
+				<section class="container">
+					<hr/>
+					
+					<p>Status page hosted by GitHub, generated with <a href="https://github.com/almanapp-software/status">almanapp-software/status</a> style by <a href="https://github.com/pyupio/statuspage">pyupio/statuspage</a></p>
+				</section>
+			</footer>
+
+		</main>
+		<script type='template' id='system_tpl'>
+			<li>
+				<% this.name %> <span class="status"  style='color:<% this.status_color %>'><% this.status %></span>
+			</li>
+		</script>
+		<script type='template' id='comment_tpl'>
+			<p><em>Update <% this.created_at %></em><br/>
+			<% this.body %>
+			</p>
+		</script>
+		<script type='template' id='incident_tpl'>
+			<div class="incident">
+				<span class="date"><% this.created_at %></span>
+
+				<% if (this.state == "closed"){ %>
+					<span class="label operational float-right">resolved</span>
+				<% }else{ %>
+					<% if (this.severity.length != 0){ %>
+						<% for (key in this.severity ) { var sev = this.severity[key]; %>
+						<% console.log(sev)%>
+						<span class="label float-right" style='background-color:<% sev.color %>;'><% sev.name %></span>
+						<!-- color:<% getContrastYIQ(sev.color) %> -->
+						<% } %>
+					<% } else { %>
+						<span class="label float-right" style='background-color:#ff0000'>Unknown Status</span>
+					<% } %>
+				<% } %>
+				<% for (key in this.systems ) { var system = this.systems[key];%>
+					<span class="label system float-right"><% system.name %></span>
+				<% } %>
+				<hr/>
+				<% if (this.state == "closed"){ %>
+					<span class="title"><strike><% this.title %></strike></span>
+				<% }else{ %>
+					<span class="title"><% this.title %></span>
+				<% } %>
+				<p><% this.body %></p>
+				<div><a href='<% this.url_link %>' target='_blank'>
+				
+				<% if(this.comments == 0) { %>
+					There are no comments yet.
+				
+				<% }else { %>
+					<% if(this.comments == 1) { %>
+						There is one comment. Click here to see it.
+					<% }else { %>
+						There are <% this.comments %> comments. Click here to see them.
+					<% } %>
+				<% } %>
+
+				</a>
+
+				</div>
+				<div>Tags: <% this.tags.join(", ") %>
+				</div>
+			</div>
+		</script>
+
+
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js'></script>
+		<script>
+	var config = {
+		"repo": "almanapp-software/status",
+		"status": {
+			"Down": {
+				level: 1,
+				color: "#e11d21"
+			},
+			"Having Issues": {
+				level: 2,
+				color: "#fbca04"
+			},
+			"Maintenance": {
+				level: 3,
+				color: "#eb6420"
+			}
+		},
+		"systems": {
+			"Backend": {
+				"color": "#bfd4f2"
+			},
+			"Website": {
+				"color": "#fef2c0"
+			},
+			"API": {
+				"color": "#bfe5bf"
+			},
+			"Android": {
+				"color": "#fad8c7"
+			},
+			"IOS": {
+				"color": "#d4c5f9"
+			},
+		}
+	};
+
+
+	$(function() {
+		$.getJSON('https://api.github.com/rate_limit',function (r){
+			var perc = (r.resources.core.remaining / r.resources.core.limit) * 100;
+			if(perc < 30){
+				$('#warning_rate').show()
+				$('#warning_rate_current').text("Your currently have "+r.resources.core.remaining + " of the "+ r.resources.core.limit + " remaining")
+			}
+		})
+		
+
+		var issues_url = 'https://api.github.com/repos/' + config.repo + '/issues?state=all'
+		var issues_url = 'test.json'
+		var incident_tpl = $('#incident_tpl').html();
+		var comment_tpl = $('#comment_tpl').html();
+		var put_on_the_end = []
+		$.getJSON(issues_url, function(r) {
+			var container = $('#incidentcontainer');
+			var closed_container = $('#closedincidentcontainer');
+			$(r).each(function(key, value) {
+				value.unique_id = key
+				value.severity = []
+				value.systems = []
+				value.tags = []
+				$(value.labels).each(function(k, v) {
+					if (config.status[v.name]) {
+						config.status[v.name].name = v.name;
+						value.severity.push(config.status[v.name])
+					} else if (config.systems[v.name]) {
+						
+						config.systems[v.name].name = v.name
+						value.systems.push(config.systems[v.name])
+					} else {
+						
+						console.error("Unknown label");
+					}
+					value.tags.push(v.name)
+				})
+				if (value.state != 'closed') {
+					$(value.severity).each(function(k2, v2) {
+						var machines = []
+						$(value.systems).each(function(k, v) {
+							console.error(v2,v)
+							var cur_level = config.systems[v.name].level  || 10
+							console.log(cur_level, ">",v2.level)
+							if(cur_level > v2.level){
+								config.systems[v.name].level = v2.level
+								config.systems[v.name].status = v2.name
+								config.systems[v.name].status_color = v2.color
+								machines.push(v.name)
+
+
+							}
+							
+						})
+						
+						
+					})
+				}
+
+
+				value.url_link = value.html_url
+				value.updates = [];
+				var tpl_result = TemplateEngine(incident_tpl, value);
+				if(value.state == 'closed'){
+					closed_container.append(tpl_result)
+				}else{
+					container.append(tpl_result)
+
+				}
+				
+				// $.getJSON(value.comments_url,function (r){
+				// 	$(r).each(function (k,v){
+				// 		$('#comments'+value.unique_id).append(TemplateEngine(comment_tpl,v))							
+				// 	})
+				// })
+
+			})
+
+			var systems = $(".systems");
+			var system_tpl = $('#system_tpl').html();
+			console.log(config.systems)
+			$.each(config.systems, function(key, value) {
+				console.log(key, value)
+				value.name = key
+				value.status = value.status ? value.status : "Available"
+				value.status_color = value.status_color ? value.status_color : "#0DE877"
+				systems.append(TemplateEngine(system_tpl, value))
+				if(value.status != "Available"){
+					var notice = $('<div/>').addClass("panel").css({
+						'background-color':value.status_color, 
+						// 'color':getContrastYIQ(v2.color)
+					}).html(key + " has status "+ value.status)
+
+					$('#noticecontainer').append(notice)
+				}
+
+			})
+			if($('#noticecontainer div').length == 0){
+				console.log("asdas")
+				var notice = $('<div/>').addClass("panel operational").html("No problems")
+				$('#noticecontainer').append(notice)
+			}
+
+			if($('#incidentcontainer div').length == 0){
+				$('#incidentcontainer').text("There are currently no active issues");
+			}
+
+			if($('#closedincidentcontainer div').length == 0){
+				$('#closedincidentcontainer').text("There are currently no inactive issues");
+			}
+			
+
+		})
+
+	})
+
+	var TemplateEngine = function(html, options) {
+		var re = /<%([^%>]+)?%>/g,
+			reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g,
+			code = 'var r=[];\n',
+			cursor = 0,
+			match;
+		var add = function(line, js) {
+			js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+				(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+			return add;
+		}
+		while (match = re.exec(html)) {
+			add(html.slice(cursor, match.index))(match[1], true);
+			cursor = match.index + match[0].length;
+		}
+		add(html.substr(cursor, html.length - cursor));
+		code += 'return r.join("");';
+		var code_striped = code.replace(/[\r\t\n]/g, '')
+		return new Function(code_striped).apply(options);
+	}
+
+	function getContrastYIQ(hexcolor) {
+		hexcolor = hexcolor.replace("#", "");
+		var r = parseInt(hexcolor.substr(0, 2), 16);
+		var g = parseInt(hexcolor.substr(2, 2), 16);
+		var b = parseInt(hexcolor.substr(4, 2), 16);
+		var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+		return (yiq >= 128) ? 'black' : 'white';
+	}
+
+			</script>
+	</body>
+</html>
